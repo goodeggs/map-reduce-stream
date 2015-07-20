@@ -1,0 +1,36 @@
+{
+  "name": "stream-cargo",
+  "version": "1.0.0",
+  "description": "Stream api around async's cargo",
+  "author": "Good Eggs <open-source@goodeggs.com>",
+  "contributors": [
+    "Aaron Borden <aaron@goodeggs.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "stream async cargo"
+  ],
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/goodeggs/stream-cargo.git"
+  },
+  "homepage": "https://github.com/goodeggs/stream-cargo",
+  "bugs": "https://github.com/goodeggs/stream-cargo/issues",
+  "dependencies": {},
+  "devDependencies": {
+    "coffee-script": ">=1.8.x",
+    "mocha": "~1.x.x",
+    "chai": "~1.x.x",
+    "mocha-sinon": "~1.x.x"
+  },
+  "scripts": {
+    "compile": "coffee --bare --compile --output lib/ src/",
+    "prepublish": "npm run compile",
+    "pretest": "npm run compile",
+    "test": "mocha"
+  },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
+  }
+}
