@@ -2,14 +2,34 @@ async        = require 'async'
 EventEmitter = require('events').EventEmitter
 
 class Node extends EventEmitter
-  constructor: (@doWork) ->
-    @sourceCargo = async.cargo @doWork.bind @
+  constructor: (options) ->
+    {transform, flush} = options
+
+    if typeof options is 'function'
+      transform = options
+      options = {}
+
+    # If we have a flush, check that it is a function
+    if !!flush and typeof flush isnt 'function'
+      throw new Error('flush must be a function that accepts a callback')
+
+    @flush(flush ? (cb) -> cb())
+    @sourceCargo = async.cargo transform.bind @
 
   end: () ->
-    @emit 'drain' if @sourceCargo.length() is 0
-    @sourceCargo.drain = =>
-      @sinkNode?.end()
-      @emit 'drain'
+    _drain = =>
+      # First, flush to the sink
+      @_flush.call @, (err) =>
+        # We're done writing to sink, so end it.
+        @sinkNode?.end()
+        @emit 'drain'
+
+    if @sourceCargo.length() is 0
+      return _drain()
+
+    # There's still tasks in the source, hook up the flush/drain event
+    @sourceCargo.drain = ->
+      _drain()
 
   drain: (fn) ->
     @on 'drain', fn
@@ -26,5 +46,9 @@ class Node extends EventEmitter
   pipe: (@sinkNode) ->
     # chain the dest Node
     @sinkNode
+
+  # Set a flush callback to be called on the flush event
+  flush: (flushCallback) ->
+    @_flush = flushCallback
 
 module.exports = Node
