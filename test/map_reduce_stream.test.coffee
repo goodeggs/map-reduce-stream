@@ -4,33 +4,34 @@ chai = require('chai')
 chai.use(sinonChai)
 expect = chai.expect
 
-{Node} = require '..'
+mrstream = require '..'
 
 {EventEmitter} = require('events')
 sinon = require 'sinon'
 
-describe 'Node', ->
-  {parent, doWork} = {}
+describe 'map-reduce-stream', ->
 
-  beforeEach ->
-    doWork = sinon.stub().yields()
-    parent = new Node doWork
+  describe 'single node', ->
+    {parent, doWork} = {}
+    beforeEach ->
+      doWork = sinon.stub().yields()
+      parent = new mrstream.Node doWork
 
-  it 'should write tasks to source cargo', (done) ->
-    parent.write ['a task'] , (error) ->
-      expect(doWork).to.be.called
-      done(error)
+    it 'should write tasks to source cargo', (done) ->
+      parent.write ['a task'] , (error) ->
+        expect(doWork).to.be.called
+        done(error)
 
   describe 'with two Nodes', ->
     { nodeA, nodeB, stub } = {}
     before ->
-      nodeA = new Node (tasks, cb) ->
+      nodeA = new mrstream.Node (tasks, cb) ->
         tasks.map (task) =>
           @push(task.toUpperCase())
         cb()
 
       stub = sinon.stub().yields()
-      nodeB = new Node stub
+      nodeB = new mrstream.Node stub
       nodeA.pipe nodeB
 
 
