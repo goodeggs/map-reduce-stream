@@ -1,10 +1,11 @@
 {
-  "name": "stream-cargo",
+  "name": "map-reduce-stream",
   "version": "1.0.0",
-  "description": "Stream api around async's cargo",
+  "description": "Write Map-reduce jobs using node streams.",
   "author": "Good Eggs <open-source@goodeggs.com>",
   "contributors": [
-    "Aaron Borden <aaron@goodeggs.com>"
+    "Aaron Borden <adborden@a14n.net>",
+    "Kristina Garfinkel <kristina.garfinkel@gmail.com>"
   ],
   "license": "MIT",
   "keywords": [
