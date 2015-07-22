@@ -20,6 +20,8 @@ class Node extends EventEmitter
     _drain = =>
       # First, flush to the sink
       @_flush.call @, (err) =>
+        @emit 'error', err if err?
+
         # We're done writing to sink, so end it.
         @sinkNode?.end()
         @emit 'drain'
