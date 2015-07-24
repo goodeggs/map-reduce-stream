@@ -35,6 +35,7 @@ class Node extends EventEmitter
 
   drain: (fn) ->
     @on 'drain', fn
+    @on 'error', fn
     @ # return `this` for chaining
 
   write: (tasks, callback) ->
@@ -46,6 +47,9 @@ class Node extends EventEmitter
     @sinkNode?.write tasks
 
   pipe: (@sinkNode) ->
+    @on 'error', (err) ->
+      @sinkNode.emit 'error', err
+
     # chain the dest Node
     @sinkNode
 
