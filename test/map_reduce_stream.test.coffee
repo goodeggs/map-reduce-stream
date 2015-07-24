@@ -5,6 +5,7 @@ chai.use(sinonChai)
 expect = chai.expect
 sinon = require 'sinon'
 
+stream = require 'stream'
 mrstream = require '..'
 
 {EventEmitter} = require('events')
@@ -73,3 +74,38 @@ describe 'map-reduce-stream', ->
           toUpperNode.write String.fromCharCode(i)
 
         toUpperNode.end()
+
+  describe 'transform stream wrapper', ->
+    describe 'writing to node', ->
+      {transformStream, transformNode} = {}
+
+      beforeEach ->
+        transformStream = sinon.createStubInstance stream.Writable
+        transformNode = new mrstream.StreamTransformNode transformStream
+
+      it 'calls write on the stream', (done) ->
+        transformNode.write 'a'
+        transformNode.end()
+        transformNode.on 'drain', ->
+          expect(transformStream.write).to.have.been.calledWith 'a'
+          done()
+
+      it 'deconstructs batched tasks', (done) ->
+        transformNode.write ['a', 'b']
+        transformNode.end()
+        transformNode.on 'drain', ->
+          expect(transformStream.write).to.have.been.calledWith 'a'
+          expect(transformStream.write).to.have.been.calledWith 'b'
+          done()
+
+    describe 'consuming node', ->
+      {transformStream, transformNode} = {}
+
+      beforeEach ->
+        transformStream = new EventEmitter()
+        transformNode = new mrstream.StreamTransformNode transformStream
+        @sinon.spy(transformNode, 'push')
+
+      it 'calls push on transformed data', ->
+        transformStream.emit 'data', 'A'
+        expect(transformNode.push).to.have.been.calledWith 'A'
