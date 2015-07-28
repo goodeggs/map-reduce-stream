@@ -26,7 +26,7 @@ class Node extends EventEmitter
         @sinkNode?.end()
         @emit 'drain'
 
-    if @sourceCargo.length() is 0
+    if @sourceCargo.idle() # No tasks, no workers running
       return _drain()
 
     # There's still tasks in the source, hook up the flush/drain event
