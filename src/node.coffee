@@ -4,7 +4,9 @@ EventEmitter = require('events').EventEmitter
 
 class Node extends EventEmitter
   constructor: (options) ->
-    {transform, flush} = options
+    {transform, flush, payload} = options
+
+    payload ?= 1000
 
     if typeof options is 'function'
       transform = options
@@ -15,7 +17,7 @@ class Node extends EventEmitter
       throw new Error('flush must be a function that accepts a callback')
 
     @flush(flush ? (cb) -> cb())
-    @sourceCargo = async.cargo transform.bind @
+    @sourceCargo = async.cargo transform.bind(@), payload
 
   end: () ->
     debug "end() with #{@sourceCargo.length()} remaining"
