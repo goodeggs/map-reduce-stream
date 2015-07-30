@@ -19,7 +19,8 @@
   "homepage": "https://github.com/goodeggs/stream-cargo",
   "bugs": "https://github.com/goodeggs/stream-cargo/issues",
   "dependencies": {
-    "async": "^1.4.0"
+    "async": "^1.4.0",
+    "debug": "^2.2.0"
   },
   "devDependencies": {
     "chai": "~1.x.x",

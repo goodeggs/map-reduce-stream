@@ -1,4 +1,5 @@
-async        = require 'async'
+async = require 'async'
+debug = require('debug')('map-reduce-stream')
 EventEmitter = require('events').EventEmitter
 
 class Node extends EventEmitter
@@ -17,6 +18,7 @@ class Node extends EventEmitter
     @sourceCargo = async.cargo transform.bind @
 
   end: () ->
+    debug "end() with #{@sourceCargo.length()} remaining"
     _drain = =>
       # First, flush to the sink
       @_flush.call @, (err) =>
