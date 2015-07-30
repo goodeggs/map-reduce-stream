@@ -6,6 +6,9 @@ class StreamTransformNode extends Node
       # chunk is transformed, push it to the next node
       @push chunk
 
+    stream.on 'error', (err) =>
+      @emit 'error', err
+
     super (tasks, callback) ->
       # Incoming tasks, write them to the stream for transform
       for task in tasks

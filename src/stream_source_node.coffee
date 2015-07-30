@@ -7,6 +7,9 @@ class StreamSource extends Node
     stream.on 'close', () =>
       @end()
 
+    stream.on 'error', (err) =>
+      @emit 'error', err
+
     super (tasks, callback) ->
       @push tasks
       callback()

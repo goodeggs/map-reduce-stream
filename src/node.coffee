@@ -20,7 +20,7 @@ class Node extends EventEmitter
     _drain = =>
       # First, flush to the sink
       @_flush.call @, (err) =>
-        @emit 'error', err if err?
+        return @emit 'error', err if err?
 
         # We're done writing to sink, so end it.
         @sinkNode?.end()
@@ -48,6 +48,7 @@ class Node extends EventEmitter
 
   pipe: (@sinkNode) ->
     @on 'error', (err) ->
+      # This isn't quite right
       @sinkNode.emit 'error', err
 
     # chain the dest Node
