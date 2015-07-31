@@ -1,6 +1,6 @@
 {
   "name": "map-reduce-stream",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Write Map-reduce jobs using node streams.",
   "author": "Good Eggs <open-source@goodeggs.com>",
   "contributors": [
